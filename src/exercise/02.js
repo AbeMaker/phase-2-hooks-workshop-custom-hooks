@@ -1,22 +1,20 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 
-/* ✅ modify this usePokemon custom hook to take in a query as an argument */
-export function usePokemon() {
-  /* ✅ this hook should only return one thing: an object with the pokemon data */
-}
-
-function Pokemon({ query }) {
-  /* 
-   ✅ move the code from the useState and useEffect hooks into the usePokemon hook
-   then, call the usePokemon hook to access the pokemon data in this component
-  */
+export function usePokemon(query) {
   const [pokemon, setPokemon] = useState(null);
+
   useEffect(() => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${query}`)
       .then(r => r.json())
       .then(setPokemon);
   }, [query]);
+
+  return { data: pokemon };
+}
+
+function Pokemon({ query }) {
+  const { data: pokemon } = usePokemon(query);
 
   // 🚫 don't worry about the code below here, you shouldn't have to touch it
   if (!pokemon) return <h3>Loading...</h3>;
@@ -60,7 +58,6 @@ const Wrapper = styled.section`
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background: papayawhip;
   text-align: center;
-
   h1 {
     background: #ef5350;
     color: white;
@@ -70,7 +67,6 @@ const Wrapper = styled.section`
     color: white;
     font-size: 2rem;
   }
-
   form {
     display: grid;
     grid-template-columns: 1fr auto;
